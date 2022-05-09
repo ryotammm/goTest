@@ -5,7 +5,7 @@ drop table tags;
 
 
 create table users (
-    id  serial　PRIMARY KEY ,
+    id  serial PRIMARY KEY ,
 	uuid varchar(64) NOT NULL UNIQUE,
 	name varchar(255),
 	email varchar(255) NOT NULL UNIQUE,
@@ -15,7 +15,7 @@ create table users (
 
 
 create table sessions (
-    id serial　 PRIMARY KEY ,
+    id serial PRIMARY KEY ,
 	uuid varchar(64) NOT NULL UNIQUE,
 	name varchar(255) NOT NULL,
 	email varchar(255),
@@ -25,7 +25,7 @@ create table sessions (
 
 
 create table practicecontents (
-    id serial　 PRIMARY KEY ,
+    id serial PRIMARY KEY ,
 	user_id INTEGER NOT NULL,
 	prefecture varchar(255) NOT NULL,
 	place varchar(255) NOT NULL,
