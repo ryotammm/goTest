@@ -68,7 +68,10 @@ func nameEdit(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("変更できませんでした")
 		}
 
-		sess.NameEditSession(sess.ID, name)
+		err3 := models.NameEditSession(sess.UserID, name)
+		if err3 != nil {
+			fmt.Println(err)
+		}
 
 		http.Redirect(w, r, "/profile", http.StatusFound)
 	}

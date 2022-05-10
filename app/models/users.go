@@ -194,9 +194,19 @@ func NameEdit(id int, name string) error {
 	return err
 }
 
-func (sess *Session) NameEditSession(id int, name string) (err error) {
+// func (sess *Session) NameEditSession(id int, name string) (err error) {
 
-	cmd := `update sessions set name = $1  where id = $2`
+// 	cmd := `update sessions set name = $1  where id = $2`
+// 	_, err = Db.Exec(cmd, name, id)
+// 	if err != nil {
+// 		log.Fatalln(err)
+// 	}
+// 	return err
+// }
+
+func NameEditSession(id int, name string) (err error) {
+
+	cmd := `update sessions set name = $1  where user_id = $2`
 	_, err = Db.Exec(cmd, name, id)
 	if err != nil {
 		log.Fatalln(err)
