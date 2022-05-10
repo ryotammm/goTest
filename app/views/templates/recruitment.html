@@ -8,7 +8,7 @@
         <form action="/recruitment" method="post" class="test9"　 enctype="multipart/form-data" >
     
           <fieldset>
-            <legend><h2 class="login_h2"><h2>練習募集</h2></legend>
+            <legend><h2 class="login_h2 h2_top"><h2>練習募集</h2></legend>
 
             <div class="search_container2">
               <select name="prefecture"  class="search-input" id="prefecture">
@@ -227,7 +227,9 @@
 </div>
 </div>
   <style>
-
+    .h2_top{
+      margin-top:25px;
+    }
     .time_p{
       font-size: 1.1rem;
       color:gray;
@@ -324,7 +326,7 @@ margin:  0 auto;
            e.preventDefault();
       return false;
     }else if (scale.value === ""){
-        alert("規模を入力してください");
+        alert("規模を数値で入力してください");
            e.preventDefault();
       return false;
     }else if (describe.value === ""){
