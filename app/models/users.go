@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"time"
 )
@@ -110,6 +111,7 @@ func (u *User) CreateSession() (session Session, err error) {
 	}
 
 	cmd2 := `select id, uuid, name,email, user_id, created_at from sessions where  uuid = $1 `
+	fmt.Println(u.UUID)
 
 	err = Db.QueryRow(cmd2, u.UUID).Scan(
 
