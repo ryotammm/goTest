@@ -103,7 +103,7 @@ func (u *User) CreateSession() (session Session, err error) {
 		name,
 		email,
 		user_id,
-		created_at) values(?,?,?,?,?)`
+		created_at) values($1,$2,$3,$4,$5)`
 
 	uuid := createUUID()
 	_, err = Db.Exec(cmd1, uuid, u.Name, u.Email, u.ID, time.Now())
@@ -111,7 +111,7 @@ func (u *User) CreateSession() (session Session, err error) {
 		log.Println(err)
 	}
 
-	cmd2 := `select id, uuid, name,email, user_id, created_at from sessions where uuid = ? and user_id = ? and email = ? `
+	cmd2 := `select id, uuid, name,email, user_id, created_at from sessions where uuid = $1 and user_id = $2 and email = $3 `
 
 	err = Db.QueryRow(cmd2, uuid, u.ID, u.Email).Scan(
 

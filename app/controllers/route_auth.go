@@ -134,7 +134,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 }
 
 func authenticate(w http.ResponseWriter, r *http.Request) {
-
 	err := r.ParseForm()
 	if err != nil {
 		log.Println(err)
@@ -167,7 +166,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 		GenerateHTML(w, pageData, "layout", "public_navbar", "login", "public_navbarMobile")
 		return
 	}
-	//sessionが存在すればerr
+
 	session, err := user.CreateSession()
 	if err != nil {
 		log.Println(err)
@@ -181,7 +180,6 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 
 	http.Redirect(w, r, "/", http.StatusFound)
-
 }
 
 //ログアウト
