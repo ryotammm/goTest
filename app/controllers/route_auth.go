@@ -186,16 +186,25 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 
 //ログアウト
 func logout(writer http.ResponseWriter, request *http.Request) {
-	cookie, err := request.Cookie("_cookie")
+	_, err := session(writer, request)
+
 	if err != nil {
-		log.Println(err)
-	}
+		GenerateHTML(writer, nil, "layout", "public_navbar", "login", "public_navbarMobile")
+	} else {
+		cookie, err := request.Cookie("_cookie")
+		if err != nil {
+			// log.Println(err)
+			GenerateHTML(writer, nil, "layout", "public_navbar", "login", "public_navbarMobile")
+		}
 
-	if err != http.ErrNoCookie {
-		session := models.Session{UUID: cookie.Value}
-		session.DeleteSessionByUUID()
-	}
+		if err != http.ErrNoCookie {
+			session := models.Session{UUID: cookie.Value}
+			session.DeleteSessionByUUID()
+			cookie.MaxAge = -1             // 格納した変数cのMaxAgeフィールドに-1を指定
+			http.SetCookie(writer, cookie) // 変更を反映するためにcをCookieにセット
+		}
 
-	GenerateHTML(writer, nil, "layout", "public_navbar", "login", "public_navbarMobile")
+		GenerateHTML(writer, nil, "layout", "public_navbar", "login", "public_navbarMobile")
+	}
 
 }
