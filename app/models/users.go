@@ -109,9 +109,9 @@ func (u *User) CreateSession() (session Session, err error) {
 		log.Println(err)
 	}
 
-	cmd2 := `select id, uuid, name,email, user_id, created_at from sessions where user_id = $1 and email = $2 `
+	cmd2 := `select id, uuid, name,email, user_id, created_at from sessions where  uuid = $1 `
 
-	err = Db.QueryRow(cmd2, u.ID, u.Email).Scan(
+	err = Db.QueryRow(cmd2, u.UUID).Scan(
 
 		&session.ID,
 		&session.UUID,
