@@ -28,7 +28,7 @@ type SuccessMessage struct {
 
 func nameEdit(w http.ResponseWriter, r *http.Request) {
 
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -80,7 +80,7 @@ func nameEdit(w http.ResponseWriter, r *http.Request) {
 
 func emailEdit(w http.ResponseWriter, r *http.Request) {
 
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -191,7 +191,7 @@ func emailEdit(w http.ResponseWriter, r *http.Request) {
 
 func passwordEdit(w http.ResponseWriter, r *http.Request) {
 
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 	if err != nil {
 		log.Fatalln(err)
 	}

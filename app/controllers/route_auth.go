@@ -11,7 +11,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
-		_, err := session(w, r)
+		_, err := sessionU(w, r)
 		if err != nil {
 			GenerateHTML(w, nil, "layout", "signup", "public_navbar", "public_navbarMobile")
 		} else {
@@ -123,7 +123,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 func login(w http.ResponseWriter, r *http.Request) {
 
-	_, err := session(w, r)
+	_, err := sessionU(w, r)
 
 	if err != nil {
 		GenerateHTML(w, nil, "layout", "public_navbar", "login", "public_navbarMobile")
@@ -184,7 +184,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 
 //ログアウト
 func logout(writer http.ResponseWriter, request *http.Request) {
-	_, err := session(writer, request)
+	_, err := sessionU(writer, request)
 
 	if err != nil {
 		GenerateHTML(writer, nil, "layout", "public_navbar", "login", "public_navbarMobile")

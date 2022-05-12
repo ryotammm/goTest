@@ -22,7 +22,7 @@ func detail(w http.ResponseWriter, r *http.Request) {
 	var pracS []models.Practicecontent
 
 	pracS = append(pracS, prac)
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 
 	pageData := pageData(sess.Name, pracS)
 	if err != nil {

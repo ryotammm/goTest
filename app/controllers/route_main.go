@@ -15,6 +15,9 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/nfnt/resize"
 )
 
@@ -31,9 +34,18 @@ const (
 	height         = 0
 )
 
+// S3のバケット名
+var bucket = "practiceimage"
+
+// key S3に保存するオブジェクトの名前
+var key = "images/test"
+
+// awsのリージョン名
+var awsRegion = "ap-northeast-1"
+
 func index(w http.ResponseWriter, r *http.Request) {
 
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 
 	pracs, err2 := models.StartPrefectures()
 	if err2 != nil {
@@ -51,7 +63,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 }
 func recruitment(w http.ResponseWriter, r *http.Request) {
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 	switch r.Method {
 	case http.MethodGet:
 
@@ -129,6 +141,7 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 			path := imagePath + uid.String() + imageExtension
 
 			dst, err := os.Create(path)
+
 			if err != nil {
 
 				log.Printf("err %v", err)
@@ -170,7 +183,6 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 
 				log.Printf("err %v", err)
 			}
-			defer dst.Close()
 
 			// 画像のエンコード(書き込み)
 			switch data {
@@ -188,7 +200,47 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 					log.Fatal(err)
 				}
 			}
+			defer dst.Close()
+			/***********************************************************************/
 
+			// 画像を読み込みます
+			imageFile, err := os.Open(path)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// sessionを作成します
+			newSession := session.Must(session.NewSessionWithOptions(session.Options{
+				SharedConfigState: session.SharedConfigEnable,
+			}))
+
+			// S3クライアントを作成します
+			svc := s3.New(newSession, &aws.Config{
+				Region: aws.String(awsRegion),
+			})
+
+			imageName := "images/" + uid.String() + imageExtension
+
+			// S3にアップロードする内容をparamsに入れます
+			params := &s3.PutObjectInput{
+				// Bucket アップロード先のS3のバケット
+				Bucket: aws.String(bucket),
+				// Key アップロードする際のオブジェクト名
+				Key: aws.String(imageName),
+				// Body アップロードする画像ファイル
+				Body: imageFile,
+			}
+
+			// S3にアップロード
+			_, err = svc.PutObject(params)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// 最後に画像ファイルを閉じる
+			defer imageFile.Close()
+			// log.Println("S3へアップロードが完了しました。")
+			/***********************************************************************/
 		}
 
 		http.Redirect(w, r, "/", http.StatusFound)
@@ -198,7 +250,7 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 
 func profile(w http.ResponseWriter, r *http.Request) {
 
-	sess, _ := session(w, r)
+	sess, _ := sessionU(w, r)
 
 	profile := Profile{
 		Name:  sess.Name,
@@ -257,7 +309,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("入力なし")
 	}
 
-	sess, err := session(w, r)
+	sess, err := sessionU(w, r)
 
 	pageData := pageData(sess.Name, pracs)
 	if pracs == nil {
