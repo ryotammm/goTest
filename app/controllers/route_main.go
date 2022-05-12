@@ -209,6 +209,8 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 
+			// 最後に画像ファイルを閉じる
+			defer imageFile.Close()
 			// sessionを作成します
 			newSession := session.Must(session.NewSessionWithOptions(session.Options{
 				SharedConfigState: session.SharedConfigEnable,
@@ -237,8 +239,6 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 
-			// 最後に画像ファイルを閉じる
-			defer imageFile.Close()
 			// log.Println("S3へアップロードが完了しました。")
 			/***********************************************************************/
 		}
