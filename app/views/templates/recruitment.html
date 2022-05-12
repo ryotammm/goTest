@@ -300,7 +300,9 @@ margin:  0 auto;
 
 
   window.addEventListener('DOMContentLoaded', ()=>{
-    document.querySelector('.test9 a').addEventListener('click',e=>{
+    const test9 = document.querySelector('.test9 a');
+    test9.disabled = true;
+    test9.addEventListener('click',e=>{
       
   
       var prefecture = document.querySelector('#prefecture');
@@ -343,6 +345,7 @@ margin:  0 auto;
     }else{
       
       e.target.closest('form').submit();
+      test9.disabled = false;
       }
     }) ;
   
