@@ -121,7 +121,7 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 
-			file_def := imagePath + "e96755e8-cedb-11ec-8604-acde48001122" + imageExtension
+			file_def := imagePath + "0d2c70be-cf34-11ec-9e01-acde48001122" + imageExtension
 			reader, ferr := os.Open(file_def)
 			if ferr != nil {
 				fmt.Println("ファイルの読み込みエラーです", ferr)
