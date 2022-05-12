@@ -127,43 +127,62 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("ファイルの読み込みエラーです", ferr)
 				os.Exit(1)
 			}
-			img, data, derr := image.Decode(reader)
-			if derr != nil {
-				fmt.Println("画像の変換エラーです", derr)
-				os.Exit(1)
-			} else {
-				fmt.Println(data, "形式のデータを得ました")
-			}
+
 			defer reader.Close()
-			resizedImg := resize.Resize(width, height, img, resize.NearestNeighbor)
+			// img, data, derr := image.Decode(reader)
+			// if derr != nil {
+			// 	fmt.Println("画像の変換エラーです", derr)
+			// 	os.Exit(1)
+			// } else {
+			// 	fmt.Println(data, "形式のデータを得ました")
+			// }
 
-			// 書き出すファイル名を指定します
-			path := imagePath + uid.String() + imageExtension
+			// resizedImg := resize.Resize(width, height, img, resize.NearestNeighbor)
 
-			dst, err := os.Create(path)
+			// sessionを作成します
+			newSession := session.Must(session.NewSessionWithOptions(session.Options{
+				SharedConfigState: session.SharedConfigEnable,
+			}))
 
-			if err != nil {
+			// S3クライアントを作成します
+			svc := s3.New(newSession, &aws.Config{
+				Region: aws.String(awsRegion),
+			})
 
-				log.Printf("err %v", err)
+			imageName := "images/" + uid.String() + imageExtension
+
+			// S3にアップロードする内容をparamsに入れます
+			params := &s3.PutObjectInput{
+				// Bucket アップロード先のS3のバケット
+				Bucket: aws.String(bucket),
+				// Key アップロードする際のオブジェクト名
+				Key: aws.String(imageName),
+				// Body アップロードする画像ファイル
+				Body: reader,
 			}
-			defer dst.Close()
+
+			// S3にアップロード
+			_, err = svc.PutObject(params)
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			// 画像のエンコード(書き込み)
-			switch data {
-			case "png":
-				if err := png.Encode(dst, resizedImg); err != nil {
-					log.Fatal(err)
-				}
-			case "jpeg", "jpg":
-				opts := &jpeg.Options{Quality: 100}
-				if err := jpeg.Encode(dst, resizedImg, opts); err != nil {
-					log.Fatal(err)
-				}
-			default:
-				if err := png.Encode(dst, resizedImg); err != nil {
-					log.Fatal(err)
-				}
-			}
+			// switch data {
+			// case "png":
+			// 	if err := png.Encode(dst, resizedImg); err != nil {
+			// 		log.Fatal(err)
+			// 	}
+			// case "jpeg", "jpg":
+			// 	opts := &jpeg.Options{Quality: 100}
+			// 	if err := jpeg.Encode(dst, resizedImg, opts); err != nil {
+			// 		log.Fatal(err)
+			// 	}
+			// default:
+			// 	if err := png.Encode(dst, resizedImg); err != nil {
+			// 		log.Fatal(err)
+			// 	}
+			// }
 
 		} else {
 
