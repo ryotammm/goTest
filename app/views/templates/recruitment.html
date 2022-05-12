@@ -301,7 +301,7 @@ margin:  0 auto;
 
   window.addEventListener('DOMContentLoaded', ()=>{
     const test9 = document.querySelector('.test9 a');
-    test9.disabled = true;
+   let count = 0;
     test9.addEventListener('click',e=>{
       
   
@@ -343,9 +343,12 @@ margin:  0 auto;
            e.preventDefault();
       return false;
     }else{
-      
-      e.target.closest('form').submit();
-      test9.disabled = false;
+
+      count++;
+
+      if (count === 1) {
+        e.target.closest('form').submit();
+      } 
       }
     }) ;
   
