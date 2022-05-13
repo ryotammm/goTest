@@ -364,3 +364,13 @@ func Deleterecruitment(id int) error {
 	}
 	return err
 }
+
+func DeleterecruitmentByUUID(uuid string) error {
+	cmd := `delete from practicecontents where uuid = ?`
+
+	_, err = Db.Exec(cmd, uuid)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return err
+}

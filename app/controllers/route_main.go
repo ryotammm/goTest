@@ -13,7 +13,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -360,13 +359,14 @@ func recruitmentDelete(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	//記事id
-	id := r.FormValue("id")
-	idI, _ := strconv.Atoi(id)
-	err = models.Deleterecruitment(idI)
+	id := r.FormValue("uuid")
+	// idI, _ := strconv.Atoi(id)
+	err = models.DeleterecruitmentByUUID(id)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	fmt.Println("削除しましgた")
 	http.Redirect(w, r, "/profile", http.StatusFound)
 
 }
