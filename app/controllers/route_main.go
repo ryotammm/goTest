@@ -365,8 +365,34 @@ func recruitmentDelete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	/****************************************************************************************/
+	newSession := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 
-	fmt.Println("削除しましgた")
+	// S3クライアントを作成します
+	svc := s3.New(newSession, &aws.Config{
+		Region: aws.String(awsRegion),
+	})
+
+	// bucket := "bucket-name"
+	obj := "/images/" + id + ".png"
+
+	_, err = svc.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(obj)})
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(obj),
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	/****************************************************************************************/
+
 	http.Redirect(w, r, "/profile", http.StatusFound)
 
 }
