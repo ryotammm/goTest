@@ -285,9 +285,13 @@ func passwordEdit(w http.ResponseWriter, r *http.Request) {
 			SuccessMessage := SuccessMessage{
 				Succ1: "パスワードを変更しました",
 			}
+			pracs, err := models.GetPracticecontentByUserID(sess.UserID)
+			if err != nil {
+				log.Fatalln(err)
+			}
 			profileData := map[string]interface{}{
 				"profile": profile,
-				"pracs":   nil,
+				"pracs":   pracs,
 				"succ":    SuccessMessage,
 			}
 
