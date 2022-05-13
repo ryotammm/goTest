@@ -366,7 +366,7 @@ func Deleterecruitment(id int) error {
 }
 
 func DeleterecruitmentByUUID(uuid string) error {
-	cmd := `delete from practicecontents where uuid = ?`
+	cmd := `delete from practicecontents where uuid = $1`
 
 	_, err = Db.Exec(cmd, uuid)
 	if err != nil {
