@@ -190,7 +190,7 @@ func SearchPrefecturesAndTags(pref string, tags []string) (pracs []Practiceconte
 //都道府県のみ
 func SearchPrefecturesX(pref string) (pracs []Practicecontent, err error) {
 
-	cmd := `select id, user_id,prefecture, place, strat_time,end_time,scale, tags,describe, uuid, created_at FROM practicecontents where prefecture = $1 `
+	cmd := `select id, user_id,prefecture, place, strat_time,end_time,scale, tags,describe, uuid, created_at FROM practicecontents where prefecture = $1 order by created_at DESC; `
 	rows, err := Db.Query(cmd, pref)
 	if err != nil {
 		log.Fatalln(err)
@@ -220,7 +220,7 @@ func SearchPrefecturesX(pref string) (pracs []Practicecontent, err error) {
 func SearchTagsX(tags string) (pracs []Practicecontent, err error) {
 
 	cmd := `select id, user_id,prefecture, place, strat_time,end_time,scale,
-	 tags,describe, uuid, created_at FROM practicecontents where tags like $1 or prefecture  like $2 or   place  like $3 ; `
+	 tags,describe, uuid, created_at FROM practicecontents where tags like $1 or prefecture  like $2 or   place  like $3  order by created_at DESC;; `
 
 	like := "%"
 
@@ -258,7 +258,7 @@ func SearchTagsX(tags string) (pracs []Practicecontent, err error) {
 func SearchPrefecturesAndTagsX(pref string, tags string) (pracs []Practicecontent, err error) {
 
 	cmd := `select id, user_id,prefecture, place, strat_time,end_time,scale,
-	tags,describe, uuid,created_at FROM practicecontents where prefecture = $1 and  (tags like $2  or  place  like $3 ); `
+	tags,describe, uuid,created_at FROM practicecontents where prefecture = $1 and  (tags like $2  or  place  like $3 ) order by created_at DESC;; `
 
 	like := "%"
 
