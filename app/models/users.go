@@ -43,8 +43,6 @@ func (u *User) CreateUser() (err error) {
 		log.Fatalln(err)
 	}
 
-	/*スキャンすrる*/
-
 	return err
 }
 

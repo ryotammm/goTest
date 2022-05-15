@@ -36,9 +36,6 @@ const (
 // S3のバケット名
 var bucket = "practiceimage"
 
-// key S3に保存するオブジェクトの名前
-var key = "images/test"
-
 // awsのリージョン名
 var awsRegion = "ap-northeast-1"
 
@@ -128,22 +125,13 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 			}
 
 			defer reader.Close()
-			// img, data, derr := image.Decode(reader)
-			// if derr != nil {
-			// 	fmt.Println("画像の変換エラーです", derr)
-			// 	os.Exit(1)
-			// } else {
-			// 	fmt.Println(data, "形式のデータを得ました")
-			// }
 
-			// resizedImg := resize.Resize(width, height, img, resize.NearestNeighbor)
-
-			// sessionを作成します
+			// sessionを作成
 			newSession := session.Must(session.NewSessionWithOptions(session.Options{
 				SharedConfigState: session.SharedConfigEnable,
 			}))
 
-			// S3クライアントを作成します
+			// S3クライアントを作成
 			svc := s3.New(newSession, &aws.Config{
 				Region: aws.String(awsRegion),
 			})
@@ -166,23 +154,6 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 
-			// 画像のエンコード(書き込み)
-			// switch data {
-			// case "png":
-			// 	if err := png.Encode(dst, resizedImg); err != nil {
-			// 		log.Fatal(err)
-			// 	}
-			// case "jpeg", "jpg":
-			// 	opts := &jpeg.Options{Quality: 100}
-			// 	if err := jpeg.Encode(dst, resizedImg, opts); err != nil {
-			// 		log.Fatal(err)
-			// 	}
-			// default:
-			// 	if err := png.Encode(dst, resizedImg); err != nil {
-			// 		log.Fatal(err)
-			// 	}
-			// }
-
 		} else {
 
 			// 画像を読み込み
@@ -193,7 +164,7 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 
 			resizedImg := resize.Resize(width, height, img, resize.NearestNeighbor)
 
-			// 書き出すファイル名を指定します
+			// 書き出すファイル名を指定
 			path := imagePath + uid.String() + imageExtension
 
 			dst, err := os.Create(path)
@@ -221,7 +192,7 @@ func recruitment(w http.ResponseWriter, r *http.Request) {
 			defer dst.Close()
 			/***********************************************************************/
 
-			// 画像を読み込みます
+			// 画像を読み込み
 			imageFile, err := os.Open(path)
 			if err != nil {
 				log.Fatal(err)
